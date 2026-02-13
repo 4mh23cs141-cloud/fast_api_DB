@@ -1,0 +1,11 @@
+- login signup
+- history of chat
+- adding attachments to the chat
+- pin a chat ( 3 chats)
+- share a chat
+- group chat
+- voice input
+- multiplayer options for Sri Sriram
+- quiz canvas
+- websearch
+- search in chat histroy

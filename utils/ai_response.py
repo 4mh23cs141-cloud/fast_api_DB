@@ -1,25 +1,35 @@
 import os
-import google.generativeai as genai
+from azure.ai.inference import ChatCompletionsClient
+from azure.ai.inference.models import SystemMessage, UserMessage
+from azure.core.credentials import AzureKeyCredential
+
+endpoint = "https://models.github.ai/inference"
+model = "gpt-4o-mini"
 from dotenv import load_dotenv
-
 load_dotenv()
-api_key = os.getenv("VITE_GEMINI_API_KEY")
+token = os.environ["GITHUB_TOKEN"]
 
-if not api_key:
-    api_key = "AIzaSyAJxAfPN4x-qtiVFKIso30r4X-JOz3IiQs"
+client = ChatCompletionsClient(
+    endpoint=endpoint,
+    credential=AzureKeyCredential(token),
+)
 
-genai.configure(api_key=api_key)
-
-model = genai.GenerativeModel('models/gemini-2.5-flash')
-
-def get_completion(user_message, system_message="You are Nexus AI, a premium intelligent assistant."):
+def get_completion(user_message, system_message="You are a helpful assistant."):
     """
-    Get a completion from the Gemini model on the backend.
+    Get a completion from the AI model.
+    
+    Args:
+        user_message: The user's message/question
+        system_message: The system prompt (default: "You are a helpful assistant.")
+    
+    Returns:
+        The model's response
     """
-    try:
-        full_prompt = f"{system_message}\n\nUser: {user_message}"
-        response = model.generate_content(full_prompt)
-        return response.text
-    except Exception as e:
-        print(f"Gemini Backend Error: {e}")
-        return f"System Error: {str(e)}"
+    response = client.complete(
+        messages=[
+            SystemMessage(system_message),
+            UserMessage(user_message),
+        ],
+        model=model
+    )
+    return response.choices[0].message.content

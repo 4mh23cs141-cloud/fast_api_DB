@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from datetime import datetime
 
 class AIRequest(BaseModel):
     message: str
@@ -7,12 +6,3 @@ class AIRequest(BaseModel):
 
 class AIResponse(BaseModel):
     response: str
-
-class ChatMessageSchema(BaseModel):
-    id: int
-    role: str
-    content: str
-    timestamp: datetime
-
-    class Config:
-        from_attributes = True

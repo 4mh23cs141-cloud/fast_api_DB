@@ -1,18 +1,19 @@
-﻿from fastapi import FastAPI
+from fastapi import FastAPI
+
+from fastapi.middleware.cors import CORSMiddleware
 from routes.user_routes import router as user_router
 from routes.ai_response_routes import router as ai_response_router
-from routes.session_routes import router as session_router
-from routes.profile_routes import router as profile_router
+from routes.search_routes import router as search_router
 from db import get_db,DATABASE_URL
 from sqlalchemy import create_engine
 import os
 from models import Base
-from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"], # In production, replace ["*"] with ["http://localhost:5173"]
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -20,8 +21,7 @@ app.add_middleware(
 
 app.include_router(user_router)
 app.include_router(ai_response_router)
-app.include_router(session_router)
-app.include_router(profile_router)
+app.include_router(search_router)
 #to create database
 
 engine=create_engine(DATABASE_URL)
